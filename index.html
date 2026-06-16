@@ -7,32 +7,29 @@
   <script src="https://sky.blackbaudcdn.net/static/sky-addin-client/1.0.15/sky-addin-client.umd.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f9;
-      padding: 16px;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; padding: 16px; }
+    .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     h1 { color: #0066cc; font-size: 1.1rem; margin-bottom: 8px; }
     p { color: #555; font-size: 0.85rem; }
+    #debug { margin-top: 12px; font-size: 0.75rem; color: #999; word-break: break-all; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>✅ Projections Tile is Live</h1>
+    <h1>✅ Projections Tile</h1>
     <p>Mackinac Center for Public Policy</p>
-    <p style="margin-top:10px; font-size:0.75rem; color:#999;">GitHub Pages host confirmed working.</p>
+    <div id="debug">Waiting for init...</div>
   </div>
   <script>
+    // Log all postMessage events to see what origin RE NXT is sending from
+    window.addEventListener('message', function(e) {
+      document.getElementById('debug').textContent = 'Origin: ' + e.origin + ' | Data: ' + JSON.stringify(e.data).substring(0, 100);
+    });
+
     var client = new BBSkyAddinClient.AddinClient({
       callbacks: {
         init: function(args) {
+          document.getElementById('debug').textContent = 'Init received! Context: ' + JSON.stringify(args.context).substring(0, 100);
           args.ready({ showUI: true, title: 'Projections Dashboard' });
         }
       },
@@ -40,7 +37,9 @@
         /^https:\/\/[\w\-\.]+\.blackbaud\.com$/,
         /^https:\/\/[\w\-\.]+\.blackbaudhosting\.com$/,
         /^https:\/\/[\w\-\.]+\.bbcloudservices\.com$/,
-        /^https:\/\/[\w\-\.]+\.sky\.blackbaud\.com$/
+        /^https:\/\/[\w\-\.]+\.sky\.blackbaud\.com$/,
+        /^https:\/\/[\w\-\.]+\.nxt\.blackbaud\.com$/,
+        /^https:\/\/host\.nxt\.blackbaud\.com$/
       ]
     });
   </script>
