@@ -35,7 +35,13 @@
         init: function(args) {
           args.ready({ showUI: true, title: 'Projections Dashboard' });
         }
-      }
+      },
+      allowedOrigins: [
+        /^https:\/\/[\w\-\.]+\.blackbaud\.com$/,
+        /^https:\/\/[\w\-\.]+\.blackbaudhosting\.com$/,
+        /^https:\/\/[\w\-\.]+\.bbcloudservices\.com$/,
+        /^https:\/\/[\w\-\.]+\.sky\.blackbaud\.com$/
+      ]
     });
   </script>
 </body>
