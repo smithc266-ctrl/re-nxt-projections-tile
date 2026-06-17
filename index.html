@@ -6,12 +6,11 @@
   <title>Projections Dashboard</title>
   <script src="https://sky.blackbaudcdn.net/static/sky-addin-client/1/sky-addin-client.umd.min.js"></script>
   <style>
-    /* Force the layout block to physically hold space so Blackbaud's container detects it */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { 
       width: 100%; 
       height: auto; 
-      min-height: 120px; /* Physically forces a baseline height inside the iframe */
+      min-height: 120px;
       background: transparent; 
     }
     .content { 
@@ -24,19 +23,16 @@
   </style>
 </head>
 <body>
-
   <div class="content">
     <h1>✅ Projections Tile</h1>
     <p>Mackinac Center for Public Policy</p>
     <p>Dashboard loading...</p>
   </div>
-
   <script>
     (function () {
       var client = new BBSkyAddinClient.AddinClient({
         callbacks: {
           init: function(args) {
-            // Handshake only. Blackbaud will automatically scale down to our min-height.
             args.ready({
               showUI: true,
               title: 'Projections Dashboard'
@@ -46,6 +42,5 @@
       });
     }());
   </script>
-
 </body>
 </html>
