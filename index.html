@@ -8,7 +8,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; }
-    body { font-family: 'Segoe UI', sans-serif; background: transparent; overflow: hidden; }
+    body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: transparent; overflow: hidden; }
     .content { padding: 16px; }
     h1 { color: #0066cc; font-size: 1.1rem; margin-bottom: 8px; }
     p { color: #555; font-size: 0.85rem; }
@@ -19,32 +19,42 @@
   <div class="content">
     <h1>✅ Projections Tile</h1>
     <p>Mackinac Center for Public Policy</p>
-    <div id="debug">Waiting for init...</div>
+    <div id="debug">Waiting for initialization...</div>
   </div>
+
   <script>
-    window.addEventListener('message', function(e) {
-      document.getElementById('debug').textContent = 'Origin: ' + e.origin + ' | Data: ' + JSON.stringify(e.data).substring(0, 100);
+    const debugEl = document.getElementById('debug');
+
+    const allowedOrigins = [
+      /^https:\/\/[\w\-\.]+\.blackbaud\.com$/,
+      /^https:\/\/[\w\-\.]+\.blackbaudhosting\.com$/,
+      /^https:\/\/[\w\-\.]+\.bbcloudservices\.com$/,
+      /^https:\/\/[\w\-\.]+\.sky\.blackbaud\.com$/,
+      /^https:\/\/[\w\-\.]+\.nxt\.blackbaud\.com$/,
+      /^https:\/\/host\.nxt\.blackbaud\.com$/,
+      /^https:\/\/[\w\-\.]+\.cloudfront\.net$/
+    ];
+
+    window.addEventListener('message', (e) => {
+      const isAllowed = allowedOrigins.some(regex => regex.test(e.origin));
+      if (!isAllowed) {
+        console.warn('Rejected message from unauthorized origin:', e.origin);
+        return;
+      }
+      debugEl.textContent = `Origin: ${e.origin} | Data: ${JSON.stringify(e.data).substring(0, 100)}`;
     });
 
-    var client = new BBSkyAddinClient.AddinClient({
+    const client = new BBSkyAddinClient.AddinClient({
       callbacks: {
-        init: function(args) {
-          document.getElementById('debug').textContent = 'Init received!';
+        init: (args) => {
+          debugEl.textContent = 'Init received!';
           args.ready({
             showUI: true,
             title: 'Projections Dashboard'
           });
         }
       },
-      allowedOrigins: [
-        /^https:\/\/[\w\-\.]+\.blackbaud\.com$/,
-        /^https:\/\/[\w\-\.]+\.blackbaudhosting\.com$/,
-        /^https:\/\/[\w\-\.]+\.bbcloudservices\.com$/,
-        /^https:\/\/[\w\-\.]+\.sky\.blackbaud\.com$/,
-        /^https:\/\/[\w\-\.]+\.nxt\.blackbaud\.com$/,
-        /^https:\/\/host\.nxt\.blackbaud\.com$/,
-        /^https:\/\/[\w\-\.]+\.cloudfront\.net$/
-      ]
+      allowedOrigins: allowedOrigins
     });
   </script>
 </body>
