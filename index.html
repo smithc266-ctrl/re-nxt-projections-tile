@@ -7,33 +7,39 @@
   <script src="https://sky.blackbaudcdn.net/static/sky-addin-client/1/sky-addin-client.umd.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; }
+    html, body { width: 100%; height: auto; } /* Allow body to define its natural content height */
     body { font-family: 'Segoe UI', sans-serif; background: transparent; }
     .content { padding: 16px; }
     h1 { color: #0066cc; font-size: 1.1rem; margin-bottom: 8px; }
-    p { color: #555; font-size: 0.85rem; }
+    p { color: #555; font-size: 0.85rem; line-height: 1.4; }
   </style>
 </head>
 <body>
-  <div class="content">
+  <div class="content" id="tile-container">
     <h1>✅ Projections Tile</h1>
     <p>Mackinac Center for Public Policy</p>
     <p>Dashboard loading...</p>
   </div>
+  
   <script>
     (function () {
       var client = new BBSkyAddinClient.AddinClient({
         callbacks: {
           init: function(args) {
+            // 1. Tell RE to show the title bar UI frame
             args.ready({
               showUI: true,
               title: 'Projections Dashboard'
             });
+            
+            // 2. CORRECT METHOD: Use navigate to set the height of the tile dynamically
+            // Wrapping it in a slight timeout ensures the DOM renders before measuring
             setTimeout(function() {
-              client.resizeAddinIframe({
-                height: document.body.scrollHeight
+              var currentHeight = document.getElementById('tile-container').offsetHeight;
+              client.navigate({
+                elementHeight: currentHeight
               });
-            }, 100);
+            }, 150);
           }
         }
       });
