@@ -6,44 +6,46 @@
   <title>Projections Dashboard</title>
   <script src="https://sky.blackbaudcdn.net/static/sky-addin-client/1/sky-addin-client.umd.min.js"></script>
   <style>
+    /* Force the layout block to physically hold space so Blackbaud's container detects it */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: auto; } /* Allow body to define its natural content height */
-    body { font-family: 'Segoe UI', sans-serif; background: transparent; }
-    .content { padding: 16px; }
+    html, body { 
+      width: 100%; 
+      height: auto; 
+      min-height: 120px; /* Physically forces a baseline height inside the iframe */
+      background: transparent; 
+    }
+    .content { 
+      padding: 16px; 
+      display: block;
+      height: auto;
+    }
     h1 { color: #0066cc; font-size: 1.1rem; margin-bottom: 8px; }
-    p { color: #555; font-size: 0.85rem; line-height: 1.4; }
+    p { color: #555; font-size: 0.85rem; }
   </style>
 </head>
 <body>
-  <div class="content" id="tile-container">
+
+  <div class="content">
     <h1>✅ Projections Tile</h1>
     <p>Mackinac Center for Public Policy</p>
     <p>Dashboard loading...</p>
   </div>
-  
+
   <script>
     (function () {
       var client = new BBSkyAddinClient.AddinClient({
         callbacks: {
           init: function(args) {
-            // 1. Tell RE to show the title bar UI frame
+            // Handshake only. Blackbaud will automatically scale down to our min-height.
             args.ready({
               showUI: true,
               title: 'Projections Dashboard'
             });
-            
-            // 2. CORRECT METHOD: Use navigate to set the height of the tile dynamically
-            // Wrapping it in a slight timeout ensures the DOM renders before measuring
-            setTimeout(function() {
-              var currentHeight = document.getElementById('tile-container').offsetHeight;
-              client.navigate({
-                elementHeight: currentHeight
-              });
-            }, 150);
           }
         }
       });
     }());
   </script>
+
 </body>
 </html>
