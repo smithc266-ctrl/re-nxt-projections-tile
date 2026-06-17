@@ -29,10 +29,9 @@
               showUI: true,
               title: 'Projections Dashboard'
             });
-            // Tell Blackbaud how tall our content is
             setTimeout(function() {
-              client.navigate({
-                elementHeight: document.body.scrollHeight
+              client.resizeAddinIframe({
+                height: document.body.scrollHeight
               });
             }, 100);
           }
